@@ -1,0 +1,49 @@
+Nmap (&quot;Network Mapper&quot;) is a free and open source utility for network discovery and
+security auditing. Many systems and network administrators also find it useful for tasks such
+as network inventory, managing service upgrade schedules, and monitoring host or service
+uptime. Nmap uses raw IP packets in novel ways to determine what hosts are available on the
+network, what services (application name and version) those hosts are offering, what operating
+
+systems (and OS versions) they are running, what type of packet filters/firewalls are in use,
+and dozens of other characteristics. It was designed to rapidly scan large networks, but works
+fine against single hosts. Nmap runs on all major computer operating systems, and official
+binary packages are available for Linux, Windows, and Mac OS X.
+Nmap Scanning:
+• Open Kali Linux and the Metasploitable2 virtual machine.
+• Obtain the IP address of the target machine (Metasploitable2 VM).
+• Open the terminal in Kali Linux.
+• Perform scanning using the following commands with nmap:
+1.
+2.
+3.
+4.
+5.
+6.
+7.
+8.
+9.
+10.
+11.
+12.
+OS Detection:
+•
+•
+•
+
+Service Detection:-
+•
+•
+Advanced Scan:-
+•
+•
+•
+
+•
+•
+
+Custom scan:-
+nmap -sS --scanflags SYNFIN -T4 www.google.com nmap -sO
+192.168.62.129(IP protocol scan)
+Send Ethernet packets:
+
+Send IP packets
