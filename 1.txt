@@ -1,0 +1,23 @@
+Experiment 1b: Intercept Network Traffic using Wireshark
+Aim:
+
+To capture and analyze network traffic and extract sensitive information using Wireshark.
+
+Procedure:
+Start Kali Linux and Metasploitable 2 virtual machines on the same network.
+Open Wireshark in Kali Linux.
+Select the active network interface and start capture.
+Open a browser and enter the target machine IP.
+Access the vulnerable web application login page.
+Enter credentials and click login.
+Stop packet capture in Wireshark.
+
+Apply the filter:
+
+http
+Identify HTTP POST login requests.
+Follow TCP Stream of the selected packet.
+Observe username and password in plaintext.
+Result:
+
+Successfully captured network traffic and extracted login credentials from HTTP packets.

@@ -1,0 +1,34 @@
+Experiment 3: Digital Signature using Cryptool
+Aim:
+
+To create, sign, and verify a digital signature using Cryptool.
+
+Procedure:
+Download Cryptool from official website:
+https://www.cryptool.org/en/ct2/downloads
+Install Cryptool on the system.
+Open Cryptool application.
+Key Generation:
+Navigate to:
+Digital Signatures → PKI → Key Generation
+Select RSA algorithm.
+Generate public and private keys.
+Creating Digital Signature:
+Select a file to sign.
+Navigate to:
+Digital Signatures → Sign Document
+Choose private key.
+Generate digital signature.
+Save signature file.
+Verifying Digital Signature:
+Navigate to:
+Digital Signatures → Verify Signature
+Select original file, signature file, and public key.
+Click Verify.
+Check verification result.
+Encryption & Hashing (Optional):
+Perform encryption using RSA.
+Generate hash using SHA algorithm.
+Result:
+
+Digital signature was successfully created and verified using Cryptool.

