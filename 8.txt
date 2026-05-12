@@ -1,86 +1,105 @@
-Experiment 8 — Intrusion Detection and Prevention System using Snort
-
+Experiment 8 — Intrusion Detection and
+Prevention System using Snort
 Aim
-To configure and test Snort IDS/IPS and create custom Snort rules.
-
-Step 1: Start Machines
-- Start Ubuntu VM
-- Start Kali Linux VM
-
-Step 2: Install Snort in Ubuntu
+To configure and test Snort IDS/IPS and create custom Snort rules for detecting network attacks.
+Theory
+Snort
+Snort is an open-source Intrusion Detection System (IDS) and Intrusion Prevention System (IPS)
+used for monitoring network traffic and detecting malicious activities.
+Snort performs:
+• Real-time traffic monitoring
+• Packet analysis
+• Protocol analysis
+• Content matching
+• Attack detection using rules
+Intrusion Detection System (IDS)
+An IDS monitors network traffic and detects suspicious or malicious activities.
+Snort Rules
+Snort uses rule-based detection. Custom rules can be created to detect:
+• ICMP attacks
+• FTP connections
+• SSH connections
+• Port scans
+• Malicious traffic
+Requirements
+• Ubuntu VM
+• Kali Linux VM
+• Snort IDS
+• Nmap Tool
+Procedure
+Step 1: Start Virtual Machines
+• Start Ubuntu VM
+• Start Kali Linux VM
+Step 2: Install Snort
+In Ubuntu terminal:
 sudo apt-get install snort
-
 Step 3: Find Network Interface
+Command:
 /sbin/route -n
-
-Select correct interface during configuration.
-
-Step 4: Go to Snort Directory
+Select the correct interface during Snort configuration.
+Step 4: Open Snort Directory
 cd /etc/snort
-
 Step 5: Open Configuration File
 sudo vi snort.conf
-
-Step 6: Go to Rules Folder
+Step 6: Open Rules Folder
 cd rules
-
 Step 7: Open Rule Files
+Commands:
 vi local.rules
 vi icmp.rules
-
 Step 8: Test Snort Configuration
+Command:
 sudo snort -T -c /etc/snort/snort.conf
-
 Observation:
-- Configuration test successful.
-
+• Configuration test successful.
 Step 9: Start Snort IDS
+Command:
 sudo snort -A console -c /etc/snort/snort.conf
-
 Observation:
-- Snort starts monitoring packets.
-
-Step 10: Scan Ubuntu from Kali
-nmap 192.168.111.133
-
+• Snort starts monitoring packets.
+Step 10: Scan Ubuntu Machine from Kali
+In Kali terminal:
+nmap 192.168.245.134
 Observation:
-- Snort detects reconnaissance scan packets.
-
-Step 11: Create Custom Snort Rules
+• Snort detects reconnaissance scan packets.
+Custom Snort Rules
+Step 11: Open Local Rules File
 cd /etc/snort/rules
 vi local.rules
-
-Add Rules:
-
-alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"Shubha"; sid:5889; rev:1;)
-
-alert tcp any any -> $HOME_NET 21 (msg:"FTP attempted"; sid:60001; rev:1;)
-
-alert tcp any any -> $HOME_NET 22 (msg:"SSH attempted"; sid:600022; rev:1;)
-
-Step 12: Verify Configuration Again
+Step 12: Add Custom Rules
+alert icmp $EXTERNAL_NET any -> $HOME_NET any (msg:"Shubha";
+sid:5889; rev:1;)
+alert tcp any any -> $HOME_NET 21 (msg:"FTP attempted";
+sid:60001; rev:1;)
+alert tcp any any -> $HOME_NET 22 (msg:"SSH attempted";
+sid:600022; rev:1;)
+Save and exit.
+Step 13: Verify Configuration Again
 sudo snort -T -c /etc/snort/snort.conf
-
-Step 13: Start Snort Again
+Observation:
+• No configuration errors detected.
+Step 14: Start Snort Again
 sudo snort -A console -c /etc/snort/snort.conf
-
-Step 14: Test ICMP Rule
-ping 192.168.111.133
-
+Rule Testing
+Step 15: Test ICMP Rule
+In Kali:
+ping 192.168.245.134
 Observation:
-- “Shubha” ICMP alert detected in Ubuntu.
-
-Step 15: Test FTP Rule
-ftp 192.168.111.133
-
+• “Shubha” ICMP alert detected.
+Step 16: Test FTP Rule
+In Kali:
+ftp 192.168.245.134
 Observation:
-- “FTP attempted” alert displayed.
-
-Step 16: Test SSH Rule
-ssh ubuntu@192.168.111.133
-
+• “FTP attempted” alert displayed in Ubuntu terminal.
+Step 17: Test SSH Rule
+In Kali:
+ssh ubuntu@192.168.245.134
 Observation:
-- “SSH attempted” alert displayed.
-
+• “SSH attempted” alert displayed.
+Observation
+• Snort successfully captured ICMP, FTP, and SSH traffic.
+• Custom rules generated alerts correctly.
+• Nmap scanning activity was detected by Snort.
 Result
-Successfully configured Snort IDS/IPS, created custom rules, and detected ICMP, FTP, and SSH attacks.
+Successfully configured Snort IDS/IPS, created custom rules, and detected ICMP, FTP, and SSH
+attacks using Snort.
